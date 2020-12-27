@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
-declare const CircularAudioWave;
+import { AudioService } from '../services/audio.service';
 
 @Component({
   selector: 'app-main',
@@ -9,21 +10,24 @@ declare const CircularAudioWave;
 })
 export class MainComponent implements OnInit {
 
-  audioContext: AudioContext;
-  audioFile: HTMLAudioElement;
-
-  track: MediaElementAudioSourceNode;
-  audioPlaying: boolean;
-
   @ViewChild('chartContainer') chartContainer: ElementRef<HTMLElement>;
 
-  constructor() { }
+  constructor(
+    private audioService: AudioService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.audioContext = new AudioContext();
+   /*  this.audioService.state.subscribe(state => {
+      console.log(state);
+    }) */
   }
   
-  handleFileInput(file: FileList){
+  uploadSong(file: FileList){
+    this.audioService.loadAudio(file);
+    this.router.navigate(['audio-player'])
+    //this.audioService.play();
+    //this.streamService.playStream(URL.createObjectURL(file.item(0))).subscribe();
 /*     this.audioFile = new Audio();
     this.audioFile.src = URL.createObjectURL(file.item(0));
     
@@ -33,11 +37,11 @@ export class MainComponent implements OnInit {
 
     this.track.connect(this.audioContext.destination); */
 
-    let wave = new CircularAudioWave(this.chartContainer.nativeElement, {mode: 'sunburst'});
+    /* let wave = new CircularAudioWave(this.chartContainer.nativeElement, {mode: 'sunburst'});
     wave.loadAudio(URL.createObjectURL(file.item(0)));
-    setTimeout(() =>     wave.play(), 2000);
+    setTimeout(() =>     wave.play(), 2000); */
   }
-
+/* 
   togglePlay() {
     if (this.audioContext.state === 'suspended') {
       this.audioContext.resume();
@@ -51,6 +55,6 @@ export class MainComponent implements OnInit {
         this.audioFile.pause();
         this.audioPlaying = false;
     }
-  }
+  } */
 
 }

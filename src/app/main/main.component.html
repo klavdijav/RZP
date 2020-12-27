@@ -6,7 +6,7 @@
         hidden
         type="file"
         accept="audio/*"
-        (change)="handleFileInput($event.target.files)"
+        (change)="uploadSong($event.target.files)"
         #audioFileInput
       >
       <div class="middle-text">or</div>
@@ -14,11 +14,11 @@
     </div>
   </div>
 
-  <div *ngIf="audioFile">
+<!--   <div *ngIf="audioFile">
     <button data-playing="false" role="switch" aria-checked="false" (click)="togglePlay()">
       <span>Play/Pause</span>
     </button>
-  </div>
+  </div> -->
 
-  <div id="chart-container" style="width: 100%; height: 100%;" #chartContainer></div>
+  <!-- <div id="chart-container" style="width: 100%; height: 100%;" #chartContainer></div> -->
 </div>
