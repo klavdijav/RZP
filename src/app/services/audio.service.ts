@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 })
 export class AudioService {
 
-  private audioFile = new Audio();
+  audioFile = new Audio();
   private audioContext = new AudioContext();
 
   track: MediaElementAudioSourceNode;
@@ -23,16 +23,19 @@ export class AudioService {
 
     this.track = this.audioContext.createMediaElementSource(this.audioFile);
     this.track.connect(this.audioContext.destination);
+
+    this.audioFile.autoplay = true;
   }
 
   play() {
+    this.audioContext.resume(); // Do not remove
     this.audioFile.play();
-    console.log(this.audioFile);
     this.state$.next(AUDIO_EVENTS.playing);
   }
 
   pause() {
     this.audioFile.pause();
+    this.state$.next(AUDIO_EVENTS.pause);
   }
 
   seekTo(seconds) {
@@ -47,9 +50,13 @@ export class AudioService {
     return this.state$.asObservable();
   }
 
+  get duration(): number {
+    return this.audioFile.duration;
+  }
+
 }
 
-enum AUDIO_EVENTS {
+export enum AUDIO_EVENTS {
   ended = "ended",
   error = "error",
   playing = "playing",

@@ -14,7 +14,7 @@ export class SongComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
+
   }
 
   onPlay() {

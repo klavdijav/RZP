@@ -1,17 +1,21 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Sec2minPipe } from './shared/sec2min.pipe';
+import { SeekComponent } from './song/seek/seek.component';
 import { SongComponent } from './song/song.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
-    SongComponent
+    SongComponent,
+    SeekComponent,
+    Sec2minPipe
   ],
   imports: [
     BrowserModule,

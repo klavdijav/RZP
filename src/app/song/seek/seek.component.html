@@ -1,0 +1,11 @@
+<div class="seek-container">
+  <progress class="seek" [value]="currentTime || 0" [max]="duration || 0" (click)="onSeek($event)"
+      #progress></progress>
+  <div class="d-flex justify-content-between">
+      <span class="duration-text">{{ currentTime | sec2min }}</span>
+      <span class="duration-text">{{ duration | sec2min }}</span>
+  </div>
+  <div class="play-pause-btn-container" style="margin-top: -10px">
+
+  </div>
+</div>
