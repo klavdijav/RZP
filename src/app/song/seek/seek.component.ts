@@ -10,7 +10,8 @@ import { AUDIO_EVENTS, AudioService } from '../../services/audio.service';
 })
 export class SeekComponent implements OnInit {
 
-  state: AUDIO_EVENTS = AUDIO_EVENTS.pause;
+  AUDIO_EVENTS = AUDIO_EVENTS;
+  state: AUDIO_EVENTS;
   currentTime: number = 0;
   duration: number = 0;
 

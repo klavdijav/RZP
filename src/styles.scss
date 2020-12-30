@@ -7,8 +7,15 @@ html {
 
 @font-face {
   font-family: "OpenSans-Regular";
-  src: url("assets/OpenSans-Regular.ttf") format("truetype");
+  src: url("assets/fonts/OpenSans-Regular.ttf") format("truetype");
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "OpenSans-Regular";
+}

@@ -14,7 +14,7 @@ export class AudioService {
   audioPlaying: boolean;
   private frequencyArray: Uint8Array;
 
-  private state$ = new BehaviorSubject<AUDIO_EVENTS>(null);
+  private state$ = new BehaviorSubject<AUDIO_EVENTS>(AUDIO_EVENTS.playing);
   private stop$ = new Subject();
   private AudioEvents = ["ended", "error", "playing", "pause", "timeupdate", "canplay"];
 
