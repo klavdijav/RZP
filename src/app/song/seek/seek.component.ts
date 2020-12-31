@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatSliderChange } from '@angular/material/slider';
 import { fromEvent, Subject } from 'rxjs';
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 
@@ -15,6 +16,9 @@ export class SeekComponent implements OnInit {
   state: AUDIO_EVENTS;
   currentTime: number = 0;
   duration: number = 0;
+  previousVolume: number = 1;
+  volume: number = 1;
+  muted: boolean = false;
 
   styles: Partial<CSSStyleDeclaration> = {
     cursor: "pointer"
@@ -96,6 +100,26 @@ export class SeekComponent implements OnInit {
       this.audioService.pause();
     } else {
       this.audioService.play();
+    }
+  }
+
+  changeVolume(event: MatSliderChange) {
+    this.audioService.setVolume(event.value);
+    this.volume = event.value;
+    this.previousVolume = event.value;
+    this.muted = event.value === 0;
+  }
+
+  toggleMute() {
+    this.muted = !this.muted;
+    if (this.muted) {
+      this.previousVolume = this.volume;
+      this.audioService.setVolume(0);
+      this.volume = 0;
+    }
+    else {
+      this.audioService.setVolume(this.previousVolume);
+      this.volume = this.previousVolume;
     }
   }
 

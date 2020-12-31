@@ -11,7 +11,7 @@
     -webkit-appearance: none;
     appearance: none;
     background-color: white;
-    color: #538ad3;
+    color: #3f51b5;
     height: 8px;
     border-radius: 8px;
   }
@@ -24,7 +24,7 @@
   }
 
   .seek::-webkit-progress-value {
-    background-color: #538ad3;
+    background-color: #3f51b5;
   }
 
   .duration-text {
@@ -39,12 +39,33 @@
 
   .play-pause-btn-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
-.icon {
+.play-icon {
   height: 24px;
   width: 24px;
   padding: 10px;
+}
+
+.volume-icon {
+  height: 16px;
+  width: 16px;
+  margin-right: 5px;
+}
+
+mat-slider {
+  margin-top: -6px;
+
+  &:hover {
+    .mat-slider-wrapper {
+      .mat-slider-thumb-container {
+        .mat-slider-thumb {
+          display: none;
+        }
+      }
+    }
+  }
 }

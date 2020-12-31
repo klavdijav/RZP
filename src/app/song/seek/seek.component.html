@@ -6,10 +6,19 @@
       <span class="duration-text">{{ duration | sec2min }}</span>
   </div>
   <div class="play-pause-btn-container">
+    <div></div>
     <img 
-      class="icon" 
+      class="play-icon" 
       [src]="state === AUDIO_EVENTS.playing ? 'assets/icons/pause.png' : 'assets/icons/play.png'"
       (click)="toggleplay()"
     />
+    <div>
+      <img
+        class="volume-icon"
+        [src]="muted ? 'assets/icons/mute.png' : 'assets/icons/volume.png'"
+        (click)="toggleMute()"
+      />
+      <mat-slider color="primary" min="0" max="1" step="0.01" [value]="volume" (input)="changeVolume($event)"></mat-slider>
+    </div>
   </div>
 </div>
