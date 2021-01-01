@@ -10,6 +10,7 @@ import { Sec2minPipe } from './shared/sec2min.pipe';
 import { SeekComponent } from './song/seek/seek.component';
 import { SongComponent } from './song/song.component';
 import { VisualizerComponent } from './song/visualizer/visualizer.component';
+import { EqualizerComponent } from './song/equalizer/equalizer.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { VisualizerComponent } from './song/visualizer/visualizer.component';
     SongComponent,
     SeekComponent,
     Sec2minPipe,
-    VisualizerComponent
+    VisualizerComponent,
+    EqualizerComponent
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,7 @@ export class AudioService {
   audioFile = new Audio();
   private analyser: AnalyserNode;
   private audioContext = new AudioContext();
+  private gain: GainNode;
 
   track: MediaElementAudioSourceNode;
   audioPlaying: boolean;
@@ -25,7 +26,11 @@ export class AudioService {
     this.analyser = this.audioContext.createAnalyser();
 
     this.track = this.audioContext.createMediaElementSource(this.audioFile);
-    this.track.connect(this.analyser);
+
+    this.gain = this.audioContext.createGain();
+    
+    this.track.connect(this.gain);
+    this.gain.connect(this.analyser);
     this.analyser.connect(this.audioContext.destination);
 
     this.frequencyArray = new Uint8Array(this.analyser.frequencyBinCount);
@@ -66,6 +71,44 @@ export class AudioService {
     return this.audioFile.duration;
   }
 
+
+  //TREMOLO EFFECT
+  private tremoloShaper: WaveShaperNode;
+  private tremoloLFO: OscillatorNode;
+  private tremoloShaperDisconnected = false;
+  private tremoloFrequency = new BehaviorSubject<number>(0);
+
+  initTremolo() {
+    this.tremoloShaper = this.audioContext.createWaveShaper();
+    this.tremoloShaper.curve = new Float32Array([0,1]);
+    this.tremoloShaper.connect(this.gain);
+  }
+
+  playTremolo(frequency: number) {
+    if (this.tremoloShaperDisconnected)
+      this.tremoloShaper.connect(this.gain);
+
+    this.tremoloLFO = this.audioContext.createOscillator();
+
+    this.tremoloFrequency.subscribe(data => {
+      this.tremoloLFO.frequency.value = data;
+    })
+
+    this.tremoloLFO.connect(this.tremoloShaper);
+    this.tremoloLFO.start(this.audioContext.currentTime);
+  }
+
+  setTremoloFrequency(frequency: number) {
+    this.tremoloFrequency.next(frequency);
+  }
+
+  pauseTremolo() {
+    this.tremoloLFO.frequency.value = 0;
+    this.tremoloLFO.stop();
+    this.tremoloLFO.disconnect();
+    this.tremoloShaper.disconnect();
+    this.tremoloShaperDisconnected = true;
+  }
 }
 
 export enum AUDIO_EVENTS {

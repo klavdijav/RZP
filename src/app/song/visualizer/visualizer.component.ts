@@ -43,7 +43,8 @@ export class VisualizerComponent implements OnInit {
       this.context.arc(center_x, center_y, radius, 0, 2 * Math.PI);
       this.context.stroke();
       
-      for (let i = 0; i < bars; i++) {
+      // HACK +3
+      for (let i = 3; i < bars + 3; i++) {
         const rads = Math.PI * 2 / bars;
         
         const bar_height = frequencyData[i] * 0.4;
