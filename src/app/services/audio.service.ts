@@ -10,6 +10,7 @@ export class AudioService {
   private analyser: AnalyserNode;
   private audioContext = new AudioContext();
   private gain: GainNode;
+  private pingPongGain: GainNode;
   private panner: StereoPannerNode;
 
   track: MediaElementAudioSourceNode;
@@ -31,9 +32,12 @@ export class AudioService {
     this.gain = this.audioContext.createGain();
     
     this.track.connect(this.gain);
+    this.pingPongGain = this.audioContext.createGain();
 
+    this.gain.connect(this.pingPongGain);
+    
     this.panner = this.audioContext.createStereoPanner();
-    this.gain.connect(this.panner);
+    this.pingPongGain.connect(this.panner);
 
     this.panner.connect(this.analyser);
     this.analyser.connect(this.audioContext.destination);
@@ -137,6 +141,47 @@ export class AudioService {
   pauseStereoTremolo() {
     this.stereoTremoloOscillator.stop();
   }
+
+  // PING PONG DELAY
+  private pingPongMerger: ChannelMergerNode;
+  private pingPongLeftDelay: DelayNode;
+  private pingPongRightDelay: DelayNode;
+  private pingPongFeedback: GainNode;
+  private pingPongDelayTime = new BehaviorSubject<number>(0.4);
+
+  initPingPongDelay() {
+    this.pingPongMerger = this.audioContext.createChannelMerger(2);
+    
+    this.pingPongLeftDelay = this.audioContext.createDelay();
+    this.pingPongRightDelay = this.audioContext.createDelay();
+    this.pingPongFeedback = this.audioContext.createGain();
+
+    this.gain.connect(this.pingPongFeedback, 0);
+    this.pingPongLeftDelay.connect(this.pingPongRightDelay);
+    this.pingPongRightDelay.connect(this.pingPongFeedback);
+    this.pingPongFeedback.connect(this.pingPongLeftDelay);
+    
+    this.pingPongFeedback.gain.value = 0.2;
+
+    this.pingPongLeftDelay.connect(this.pingPongMerger, 0, 0);
+    this.pingPongRightDelay.connect(this.pingPongMerger, 0, 1);
+    this.pingPongMerger.connect(this.pingPongGain);
+
+    this.pingPongDelayTime.subscribe(value => {
+      this.pingPongLeftDelay.delayTime.value = value;
+      this.pingPongRightDelay.delayTime.value = value;
+    });
+  }
+
+  setPingPongDelayTime(delay: number) {
+    this.pingPongDelayTime.next(delay);
+  }
+
+  pausePingPongDelay() {
+    this.gain.disconnect(this.pingPongFeedback);
+    this.pingPongMerger.disconnect(this.pingPongGain);
+  }
+
 }
 
 export enum AUDIO_EVENTS {

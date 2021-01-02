@@ -16,6 +16,7 @@ export class EqualizerComponent implements OnInit {
 
   tremoloFrequency = 5;
   stereoTremoloFrequency = 1;
+  pingPongDelayTime = 0.4;
 
   constructor(
     private audioService: AudioService
@@ -33,6 +34,9 @@ export class EqualizerComponent implements OnInit {
         case 'stereo-tremolo':
           this.audioService.playStereoTremolo();
           break;
+        case 'ping-pong': 
+          this.audioService.initPingPongDelay();
+          break;
       }
       this.effectActive = value;
     });
@@ -46,6 +50,8 @@ export class EqualizerComponent implements OnInit {
       case 'stereo-tremolo': 
         this.audioService.pauseStereoTremolo();
         break;
+      case 'ping-pong': 
+        this.audioService.pausePingPongDelay();
     }
   }
 
@@ -55,6 +61,10 @@ export class EqualizerComponent implements OnInit {
 
   changeStereoTremoloFrequency(event: MatSliderChange) {
     this.audioService.setStereoTremoloFrequency(event.value);
+  }
+
+  changePingPongDelayTime(event: MatSliderChange) {
+    this.audioService.setPingPongDelayTime(event.value);
   }
 
 }

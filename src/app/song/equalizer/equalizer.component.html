@@ -6,6 +6,7 @@
       <mat-select [formControl]="effectsControl">
         <mat-option value="tremolo">Tremolo</mat-option>
         <mat-option value="stereo-tremolo">Stereo tremolo</mat-option>
+        <mat-option value="ping-pong">Ping-pong delay</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -28,7 +29,7 @@
     <div *ngSwitchCase="'stereo-tremolo'">
       <span class="form-title">Panning rate</span>
       <mat-slider 
-        min="0"
+        min="1"
         max="10"
         step="1"
         [thumbLabel]="true"
@@ -36,6 +37,20 @@
         (input)="changeStereoTremoloFrequency($event)"
       >
       </mat-slider>
+    </div>
+    <div *ngSwitchCase="'ping-pong'">
+      <div>
+        <span class="form-title">Delay time</span>
+        <mat-slider 
+          min="0"
+          max="1"
+          step="0.1"
+          [thumbLabel]="true"
+          [(ngModel)]="pingPongDelayTime" 
+          (input)="changePingPongDelayTime($event)"
+        >
+        </mat-slider>
+      </div>
     </div>
     <div *ngSwitchDefault>
       
