@@ -11,11 +11,11 @@ import { AudioService } from '../../services/audio.service';
 })
 export class EqualizerComponent implements OnInit {
 
-  tremoloActive = false;
-
+  effectActive = null;
   effectsControl = new FormControl();
 
-  tremoloFrequency = 0;
+  tremoloFrequency = 5;
+  stereoTremoloFrequency = 1;
 
   constructor(
     private audioService: AudioService
@@ -25,22 +25,36 @@ export class EqualizerComponent implements OnInit {
     this.audioService.initTremolo();
 
     this.effectsControl.valueChanges.subscribe(value => {
+      this.pauseCurrentEffect();
       switch(value){
         case 'tremolo': 
-          this.toggleTremolo(true);
+          this.audioService.playTremolo();
+          break;
+        case 'stereo-tremolo':
+          this.audioService.playStereoTremolo();
+          break;
       }
-    })
+      this.effectActive = value;
+    });
   }
 
-  toggleTremolo(play) {
-    if (play)
-      this.audioService.playTremolo(0);
-    else 
-      this.audioService.pauseTremolo();
+  pauseCurrentEffect() {
+    switch(this.effectActive){
+      case 'tremolo': 
+        this.audioService.pauseTremolo();
+        break;
+      case 'stereo-tremolo': 
+        this.audioService.pauseStereoTremolo();
+        break;
+    }
   }
 
   changeTremoloFrequency(event: MatSliderChange){
     this.audioService.setTremoloFrequency(event.value);
+  }
+
+  changeStereoTremoloFrequency(event: MatSliderChange) {
+    this.audioService.setStereoTremoloFrequency(event.value);
   }
 
 }

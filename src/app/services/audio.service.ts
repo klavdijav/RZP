@@ -10,6 +10,7 @@ export class AudioService {
   private analyser: AnalyserNode;
   private audioContext = new AudioContext();
   private gain: GainNode;
+  private panner: StereoPannerNode;
 
   track: MediaElementAudioSourceNode;
   audioPlaying: boolean;
@@ -30,7 +31,11 @@ export class AudioService {
     this.gain = this.audioContext.createGain();
     
     this.track.connect(this.gain);
-    this.gain.connect(this.analyser);
+
+    this.panner = this.audioContext.createStereoPanner();
+    this.gain.connect(this.panner);
+
+    this.panner.connect(this.analyser);
     this.analyser.connect(this.audioContext.destination);
 
     this.frequencyArray = new Uint8Array(this.analyser.frequencyBinCount);
@@ -76,7 +81,7 @@ export class AudioService {
   private tremoloShaper: WaveShaperNode;
   private tremoloLFO: OscillatorNode;
   private tremoloShaperDisconnected = false;
-  private tremoloFrequency = new BehaviorSubject<number>(0);
+  private tremoloFrequency = new BehaviorSubject<number>(5);
 
   initTremolo() {
     this.tremoloShaper = this.audioContext.createWaveShaper();
@@ -84,7 +89,7 @@ export class AudioService {
     this.tremoloShaper.connect(this.gain);
   }
 
-  playTremolo(frequency: number) {
+  playTremolo() {
     if (this.tremoloShaperDisconnected)
       this.tremoloShaper.connect(this.gain);
 
@@ -108,6 +113,29 @@ export class AudioService {
     this.tremoloLFO.disconnect();
     this.tremoloShaper.disconnect();
     this.tremoloShaperDisconnected = true;
+  }
+
+  // STEREO TREMOLO
+  private stereoTremoloOscillator: OscillatorNode;
+  private stereoTremoloFrequency = new BehaviorSubject<number>(1);  
+
+  playStereoTremolo() {
+    this.stereoTremoloOscillator = this.audioContext.createOscillator();
+    this.stereoTremoloOscillator.connect(this.panner.pan);
+
+    this.stereoTremoloFrequency.subscribe(value => {
+      this.stereoTremoloOscillator.frequency.value = value;
+    });
+
+    this.stereoTremoloOscillator.start(this.audioContext.currentTime);
+  }
+
+  setStereoTremoloFrequency(frequency: number) {
+    this.stereoTremoloFrequency.next(frequency);
+  }
+
+  pauseStereoTremolo() {
+    this.stereoTremoloOscillator.stop();
   }
 }
 
