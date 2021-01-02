@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatSliderChange } from '@angular/material/slider';
 
 import { AudioService } from '../../services/audio.service';
 
@@ -10,7 +12,10 @@ import { AudioService } from '../../services/audio.service';
 export class EqualizerComponent implements OnInit {
 
   tremoloActive = false;
-  value = 6;
+
+  effectsControl = new FormControl();
+
+  tremoloFrequency = 0;
 
   constructor(
     private audioService: AudioService
@@ -18,18 +23,24 @@ export class EqualizerComponent implements OnInit {
 
   ngOnInit(): void {
     this.audioService.initTremolo();
+
+    this.effectsControl.valueChanges.subscribe(value => {
+      switch(value){
+        case 'tremolo': 
+          this.toggleTremolo(true);
+      }
+    })
   }
 
   toggleTremolo(play) {
     if (play)
-      this.audioService.playTremolo(5);
+      this.audioService.playTremolo(0);
     else 
       this.audioService.pauseTremolo();
   }
 
-  setValue(){
-    this.audioService.setTremoloFrequency(this.value);
-    this.value = this.value + 10;
+  changeTremoloFrequency(event: MatSliderChange){
+    this.audioService.setTremoloFrequency(event.value);
   }
 
 }

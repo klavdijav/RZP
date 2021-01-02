@@ -6,13 +6,12 @@
       <span class="duration-text">{{ duration | sec2min }}</span>
   </div>
   <div class="play-pause-btn-container">
-    <div></div>
     <img 
       class="play-icon" 
       [src]="state === AUDIO_EVENTS.playing ? 'assets/icons/pause.png' : 'assets/icons/play.png'"
       (click)="toggleplay()"
     />
-    <div>
+    <div class="volume-control">
       <img
         class="volume-icon"
         [src]="muted ? 'assets/icons/mute.png' : 'assets/icons/volume.png'"

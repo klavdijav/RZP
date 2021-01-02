@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,10 +9,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
 import { Sec2minPipe } from './shared/sec2min.pipe';
+import { EqualizerComponent } from './song/equalizer/equalizer.component';
 import { SeekComponent } from './song/seek/seek.component';
 import { SongComponent } from './song/song.component';
 import { VisualizerComponent } from './song/visualizer/visualizer.component';
-import { EqualizerComponent } from './song/equalizer/equalizer.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,10 @@ import { EqualizerComponent } from './song/equalizer/equalizer.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatSliderModule
+    MatSliderModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

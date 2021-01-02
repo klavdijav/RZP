@@ -1,4 +1,5 @@
 .seek-container {
+  position: relative;
   width: 95%;
   margin: auto;
 
@@ -39,7 +40,7 @@
 
   .play-pause-btn-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
   }
 }
@@ -50,10 +51,15 @@
   padding: 10px;
 }
 
-.volume-icon {
-  height: 16px;
-  width: 16px;
-  margin-right: 5px;
+.volume-control {
+  position: absolute;
+  right: 0px;
+
+  .volume-icon {
+    height: 16px;
+    width: 16px;
+    margin-right: 5px;
+  }
 }
 
 mat-slider {
