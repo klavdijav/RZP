@@ -15,6 +15,10 @@ export class EqualizerComponent implements OnInit {
 
   frequency = 0;
   filterQ = 0;
+  filterGain = 0;
+
+  showQSection = false;
+  showGainSection = false;
 
   tremoloFrequency = 5;
   stereoTremoloFrequency = 1;
@@ -41,7 +45,6 @@ export class EqualizerComponent implements OnInit {
           break;
         default: 
           this.changeSimpleFilterType(value);
-          console.log("change value", value);
           break;
       }
       this.effectActive = value;
@@ -58,12 +61,22 @@ export class EqualizerComponent implements OnInit {
         break;
       case 'ping-pong': 
         this.audioService.pausePingPongDelay();
+        break;
+      default: 
+        this.changeSimpleFilterType('highpass');
+        this.resetFrequency();
+        this.audioService.setQ(0);
+        this.audioService.setGain(0);
+
+        this.filterQ = 0;
+        this.filterGain = 0;
     }
   }
 
-/*   changeFrequency(event: MatSliderChange) {
-    this.audioService.
-  } */
+  private resetFrequency() {
+    this.frequency = 0;
+    this.audioService.setFrequency(0);
+  }
 
   changeTremoloFrequency(event: MatSliderChange){
     this.audioService.setTremoloFrequency(event.value);
@@ -83,6 +96,10 @@ export class EqualizerComponent implements OnInit {
 
   changeQ(event: MatSliderChange) {
     this.audioService.setQ(event.value);
+  }
+
+  changeFilterGain(event: MatSliderChange) {
+    this.audioService.setGain(event.value);
   }
 
   changeSimpleFilterType(type: BiquadFilterType) {

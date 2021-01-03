@@ -1,0 +1,35 @@
+.page-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .center-container {
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+.main-button {
+  background-color: #e05527;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-family: "OpenSans-Regular";
+
+  &.grey {
+    background-color: grey;
+  }
+
+  &:hover {
+    opacity: 0.7;
+    cursor: pointer;
+  }
+}
+
+.middle-text {
+  padding: 10px 0;
+  font-family: "OpenSans-Regular";
+  text-align: center;
+}

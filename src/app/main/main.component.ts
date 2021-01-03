@@ -22,7 +22,12 @@ export class MainComponent implements OnInit {
   
   uploadSong(file: FileList){
     this.audioService.loadAudio(file);
-    this.router.navigate(['audio-player'])
+    this.router.navigate(['audio-player']);
+  }
+
+  playSample() {
+    this.audioService.loadAudio();
+    this.router.navigate(['audio-player']);
   }
 
 }

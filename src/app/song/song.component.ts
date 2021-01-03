@@ -9,20 +9,20 @@ import { AudioService } from '../services/audio.service';
 })
 export class SongComponent implements OnInit {
 
-  constructor(
-    private audioService: AudioService
-  ) { }
+  playing = false;
 
-  ngOnInit(): void {
+  constructor(private audioService: AudioService) { }
 
+  ngOnInit(): void {}
+
+  uploadSong(file: FileList){
+    this.audioService.loadAudio(file);
+    this.playing = true;
   }
 
-  onPlay() {
-    this.audioService.play();
-  }
-
-  onPause() {
-    this.audioService.pause();
+  playSample() {
+    this.audioService.loadAudio();
+    this.playing = true;
   }
 
 }

@@ -16,20 +16,25 @@ export class AudioService {
 
   private filterFrequency = new BehaviorSubject<number>(0);
   private filterQ = new BehaviorSubject<number>(0);
+  private filterGain = new BehaviorSubject<number>(0);
   private filterType = new BehaviorSubject<BiquadFilterType>('highpass');
 
   track: MediaElementAudioSourceNode;
   audioPlaying: boolean;
   private frequencyArray: Uint8Array;
 
-  private state$ = new BehaviorSubject<AUDIO_EVENTS>(AUDIO_EVENTS.playing);
+  private state$ = new BehaviorSubject<AUDIO_EVENTS>(AUDIO_EVENTS.pause);
   private stop$ = new Subject();
   private AudioEvents = ["ended", "error", "playing", "pause", "timeupdate", "canplay"];
 
   constructor() { }
 
-  loadAudio(file: FileList) {
-    this.audioFile.src = URL.createObjectURL(file.item(0));
+  loadAudio(file?: FileList) {
+    if (file)
+      this.audioFile.src = URL.createObjectURL(file.item(0));
+    else 
+      this.audioFile = new Audio('assets/guitar.mp3');
+      
     this.analyser = this.audioContext.createAnalyser();
 
     this.track = this.audioContext.createMediaElementSource(this.audioFile);
@@ -45,7 +50,6 @@ export class AudioService {
     this.pingPongGain.connect(this.panner);
 
     this.panner.connect(this.analyser);
-    //this.analyser.connect(this.audioContext.destination);
 
     this.biquadFilter = this.audioContext.createBiquadFilter();
 
@@ -59,6 +63,10 @@ export class AudioService {
       this.biquadFilter.Q.value = value;
     });
 
+    this.filterGain.subscribe(value => {
+      this.biquadFilter.gain.value = value;
+    });
+
     this.filterType.subscribe(value => {
       this.biquadFilter.type = value;
     });
@@ -68,7 +76,7 @@ export class AudioService {
     this.frequencyArray = new Uint8Array(this.analyser.frequencyBinCount);
 
     this.audioContext.resume(); // Do not remove
-    this.audioFile.autoplay = true;
+    //this.audioFile.autoplay = true;
 
   }
 
@@ -110,6 +118,10 @@ export class AudioService {
 
   setQ(q: number) {
     this.filterQ.next(q);
+  }
+
+  setGain(gain: number) {
+    this.filterGain.next(gain);
   }
 
   setSimpleFilterType(type: BiquadFilterType) {

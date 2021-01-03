@@ -1,5 +1,24 @@
-<app-visualizer></app-visualizer>
+<div *ngIf="!playing" class="page-container">
+  <div class="center-container">
+    <div>
+      <button mat-raised-button color="primary" (click)="audioFileInput.click()">Upload song</button>
+      <input 
+        hidden
+        type="file"
+        accept="audio/*"
+        (change)="uploadSong($event.target.files)"
+        #audioFileInput
+      >
+      <div class="middle-text">or</div>
+      <button mat-raised-button (click)="playSample()">Try sample song</button>
+    </div>
+  </div>
+</div>
 
-<app-seek></app-seek>
-
-<app-equalizer></app-equalizer>
+<div *ngIf="playing">
+  <app-visualizer></app-visualizer>
+  
+  <app-seek></app-seek>
+  
+  <app-equalizer></app-equalizer>
+</div>

@@ -8,6 +8,11 @@
           <mat-option value="lowpass">Lowpass</mat-option>
           <mat-option value="highpass">Highpass</mat-option>
           <mat-option value="bandpass">Bandpass</mat-option>
+          <mat-option value="notch">Bandstop</mat-option>
+          <mat-option value="allpass">Allpass</mat-option>
+          <mat-option value="lowshelf">Lowshelf</mat-option>
+          <mat-option value="highshelf">Highshelf</mat-option>
+          <mat-option value="peaking">Peaking</mat-option>
         </mat-optgroup>
         <mat-optgroup label="Advanced effects">
           <mat-option value="tremolo">Tremolo</mat-option>
@@ -18,7 +23,7 @@
     </mat-form-field>
   </div>
 
-  <div [ngSwitch]="effectsControl.value">
+  <div *ngIf="effectsControl.value" [ngSwitch]="effectsControl.value">
     <div *ngSwitchCase="'tremolo'">
       <div>
         <span class="form-title">Speed</span>
@@ -64,7 +69,7 @@
         <span class="form-title">Frequency</span>
         <mat-slider
           min="0"
-          max="3000" 
+          max="5000" 
           step="100" 
           [thumbLabel]="true" 
           [(ngModel)]="frequency" 
@@ -72,15 +77,27 @@
         >
         </mat-slider>
       </div>
-      <div>
+      <div *ngIf="effectsControl.value !== 'lowshelf' || effectsControl.value !== 'highshelf'">
         <span class="form-title">Q</span>
         <mat-slider
           min="0"
-          max="20" 
+          max="10" 
           step="0.5" 
           [thumbLabel]="true" 
           [(ngModel)]="filterQ" 
           (input)="changeQ($event)"
+        >
+        </mat-slider>
+      </div>
+      <div *ngIf="effectsControl.value === 'lowshelf' || effectsControl.value === 'highshelf' || effectsControl.value === 'peaking'">
+        <span class="form-title">Gain</span>
+        <mat-slider
+          min="0"
+          max="1" 
+          step="0.1" 
+          [thumbLabel]="true" 
+          [(ngModel)]="filterGain" 
+          (input)="changeFilterGain($event)"
         >
         </mat-slider>
       </div>
