@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +23,7 @@ export class AudioService {
   audioPlaying: boolean;
   private frequencyArray: Uint8Array;
 
-  private state$ = new BehaviorSubject<AUDIO_EVENTS>(AUDIO_EVENTS.pause);
-  private stop$ = new Subject();
-  private AudioEvents = ["ended", "error", "playing", "pause", "timeupdate", "canplay"];
+  private state$ = new BehaviorSubject<AUDIO_EVENTS>(AUDIO_EVENTS.playing);
 
   constructor() { }
 
@@ -35,25 +33,23 @@ export class AudioService {
     else 
       this.audioFile = new Audio('assets/guitar.mp3');
       
-    this.analyser = this.audioContext.createAnalyser();
-
     this.track = this.audioContext.createMediaElementSource(this.audioFile);
     
     this.gain = this.audioContext.createGain();
     
     this.track.connect(this.gain);
     this.pingPongGain = this.audioContext.createGain();
-
+    
     this.gain.connect(this.pingPongGain);
     
     this.panner = this.audioContext.createStereoPanner();
     this.pingPongGain.connect(this.panner);
-
-    this.panner.connect(this.analyser);
-
+    
     this.biquadFilter = this.audioContext.createBiquadFilter();
-
-    this.analyser.connect(this.biquadFilter);
+    this.panner.connect(this.biquadFilter);
+    
+    this.analyser = this.audioContext.createAnalyser();
+    this.biquadFilter.connect(this.analyser);
 
     this.filterFrequency.subscribe(value => {
       this.biquadFilter.frequency.value = value;
@@ -71,13 +67,12 @@ export class AudioService {
       this.biquadFilter.type = value;
     });
 
-    this.biquadFilter.connect(this.audioContext.destination);
+    this.analyser.connect(this.audioContext.destination);
 
     this.frequencyArray = new Uint8Array(this.analyser.frequencyBinCount);
 
     this.audioContext.resume(); // Do not remove
-    //this.audioFile.autoplay = true;
-
+    this.audioFile.autoplay = true;
   }
 
   play() {
@@ -228,6 +223,13 @@ export class AudioService {
   pausePingPongDelay() {
     this.gain.disconnect(this.pingPongFeedback);
     this.pingPongMerger.disconnect(this.pingPongGain);
+  }
+
+  // REVERB
+  private reverbConvolver: ConvolverNode;
+
+  playReverb() {
+    
   }
 
 }
