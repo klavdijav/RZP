@@ -12,6 +12,11 @@ export class AudioService {
   private gain: GainNode;
   private pingPongGain: GainNode;
   private panner: StereoPannerNode;
+  private biquadFilter: BiquadFilterNode;
+
+  private filterFrequency = new BehaviorSubject<number>(0);
+  private filterQ = new BehaviorSubject<number>(0);
+  private filterType = new BehaviorSubject<BiquadFilterType>('highpass');
 
   track: MediaElementAudioSourceNode;
   audioPlaying: boolean;
@@ -28,7 +33,7 @@ export class AudioService {
     this.analyser = this.audioContext.createAnalyser();
 
     this.track = this.audioContext.createMediaElementSource(this.audioFile);
-
+    
     this.gain = this.audioContext.createGain();
     
     this.track.connect(this.gain);
@@ -40,7 +45,25 @@ export class AudioService {
     this.pingPongGain.connect(this.panner);
 
     this.panner.connect(this.analyser);
-    this.analyser.connect(this.audioContext.destination);
+    //this.analyser.connect(this.audioContext.destination);
+
+    this.biquadFilter = this.audioContext.createBiquadFilter();
+
+    this.analyser.connect(this.biquadFilter);
+
+    this.filterFrequency.subscribe(value => {
+      this.biquadFilter.frequency.value = value;
+    });
+
+    this.filterQ.subscribe(value => {
+      this.biquadFilter.Q.value = value;
+    });
+
+    this.filterType.subscribe(value => {
+      this.biquadFilter.type = value;
+    });
+
+    this.biquadFilter.connect(this.audioContext.destination);
 
     this.frequencyArray = new Uint8Array(this.analyser.frequencyBinCount);
 
@@ -78,6 +101,19 @@ export class AudioService {
 
   get duration(): number {
     return this.audioFile.duration;
+  }
+
+  // SIMPLE EFFECTS
+  setFrequency(frequency: number) {
+    this.filterFrequency.next(frequency);
+  }
+
+  setQ(q: number) {
+    this.filterQ.next(q);
+  }
+
+  setSimpleFilterType(type: BiquadFilterType) {
+    this.filterType.next(type);
   }
 
 

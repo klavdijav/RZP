@@ -10,9 +10,11 @@ import { AudioService } from '../../services/audio.service';
   styleUrls: ['./equalizer.component.scss']
 })
 export class EqualizerComponent implements OnInit {
-
   effectActive = null;
   effectsControl = new FormControl();
+
+  frequency = 0;
+  filterQ = 0;
 
   tremoloFrequency = 5;
   stereoTremoloFrequency = 1;
@@ -37,6 +39,10 @@ export class EqualizerComponent implements OnInit {
         case 'ping-pong': 
           this.audioService.initPingPongDelay();
           break;
+        default: 
+          this.changeSimpleFilterType(value);
+          console.log("change value", value);
+          break;
       }
       this.effectActive = value;
     });
@@ -55,6 +61,10 @@ export class EqualizerComponent implements OnInit {
     }
   }
 
+/*   changeFrequency(event: MatSliderChange) {
+    this.audioService.
+  } */
+
   changeTremoloFrequency(event: MatSliderChange){
     this.audioService.setTremoloFrequency(event.value);
   }
@@ -65,6 +75,18 @@ export class EqualizerComponent implements OnInit {
 
   changePingPongDelayTime(event: MatSliderChange) {
     this.audioService.setPingPongDelayTime(event.value);
+  }
+
+  changeFrequency(event: MatSliderChange) {
+    this.audioService.setFrequency(event.value);
+  }
+
+  changeQ(event: MatSliderChange) {
+    this.audioService.setQ(event.value);
+  }
+
+  changeSimpleFilterType(type: BiquadFilterType) {
+    this.audioService.setSimpleFilterType(type);
   }
 
 }
